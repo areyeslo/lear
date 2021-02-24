@@ -216,6 +216,21 @@ class VersionedBusinessDetailsService:  # pylint: disable=too-many-public-method
             .order_by(business_version.transaction_id).one_or_none()
         return VersionedBusinessDetailsService.business_revision_json(business_revision, business.json())
 
+
+    @staticmethod
+    def get_business_revision_transaction_id(filing_id, business) -> dict:
+        """Consolidates the business info as of a particular transaction."""
+        filing = Filing.find_by_id(filing_id)
+        business_version = version_class(Business)
+        business_revision = db.session.query(business_version) \
+            .filter(business_version.transaction_id <= filing.transaction_id) \
+            .filter(business_version.operation_type != 2) \
+            .filter(business_version.id == business.id) \
+            .filter(or_(business_version.end_transaction_id == None,  # pylint: disable=singleton-comparison # noqa: E711,E501;
+                        business_version.end_transaction_id >= filing.transaction_id)) \
+            .order_by(business_version.transaction_id).first()
+        return VersionedBusinessDetailsService.business_revision_json(business_revision, business.json())
+
     @staticmethod
     def get_business_revision_after_filing(filing_id, business_id) -> dict:
         """Consolidates the business info as of a particular transaction."""
