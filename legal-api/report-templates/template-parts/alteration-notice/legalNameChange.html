@@ -1,0 +1,26 @@
+<div class="no-page-break">
+    {% if alteration.nameRequest.legalName!=business.legalName %}
+        <div class="separator mt-4"></div>
+        <div class="section-title mt-4">Change of Company Name</div>
+        <div class="section-data mt-4">
+            <table class="section-data-table">
+                <tr class="no-page-break">
+                <td><div class="title"><b>From</b></div>
+                    <div>{{business.legalName}}</div>
+                </td>
+                <td><div class="title"><b>To</b></div>
+                    <div>{{alteration.nameRequest.legalName}}</div>
+                </td>
+                
+                </tr>         
+            </table>
+            <div class="section-data mt-4">
+                <div class="title">Name Request Number</div>
+                {{alteration.nameRequest.nrNumber}}                
+            </div>
+        </div>
+        </div>
+    {% endif %}
+</div>
+
+
